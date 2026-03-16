@@ -14,7 +14,7 @@ const CLIENT_ICONS: Record<EmailClient, string> = {
   'outlook-desktop': '🖥️',
   'outlook-com':     '🌐',
   'outlook-mobile':  '📱',
-  'apple-mail':      '🍎',
+  'apple-mail':      '✉️',
   'outlook-mac':     '💻',
   'yahoo-mail':      '🌐',
 }

@@ -177,32 +177,44 @@ export function transformColorForGmailAndroid(
   let newL: number, newS: number
 
   if (property === 'background') {
-    if (l > 0.85) {
-      newL = 0.12
-      newS = s * 0.80
-    } else if (l > 0.60) {
-      newL = l * 0.35
-      newS = s
-    } else if (l >= 0.40) {
-      newL = l * 0.55
-      newS = s
+    // Gmail Android only transforms neutral/low-saturation backgrounds.
+    // Saturated (colored) backgrounds — buttons, badges, accent cells — are preserved.
+    if (s > 0.15) return v
+
+    if (l > 0.80) {
+      // Near-white / white → dark gray (~#262626)
+      newL = 0.15
+      newS = 0
+    } else if (l > 0.50) {
+      // Light gray → proportionally darker
+      newL = l * 0.25
+      newS = 0
+    } else if (l > 0.30) {
+      // Medium-light gray → moderately darkened
+      newL = l * 0.40
+      newS = 0
     } else {
       return v // already dark
     }
   } else {
-    // text
-    if (l < 0.20) {
-      newL = 0.88
-      newS = s * 0.85
-    } else if (l < 0.45) {
-      newL = 0.60 + (0.45 - l) * 0.5
-      newS = s
+    // text — Gmail Android only transforms neutral text (dark → light).
+    // Colored text (links, accent labels) is preserved.
+    if (s > 0.20) return v
+
+    if (l < 0.30) {
+      // Dark/black text → near-white
+      newL = 0.87
+      newS = 0
+    } else if (l < 0.55) {
+      // Mid-gray text → lightened enough to be visible on dark background
+      newL = 0.55 + (0.55 - l) * 0.35
+      newS = 0
     } else {
-      return v // already light-ish
+      return v // already light
     }
   }
 
-  newS = s < 0.05 ? 0 : Math.min(1, Math.max(0, newS))
+  newS = Math.min(1, Math.max(0, newS))
   newL = Math.min(1, Math.max(0, newL))
 
   const [nr, ng, nb] = hslToRgb(h, newS, newL)

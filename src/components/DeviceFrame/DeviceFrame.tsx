@@ -76,7 +76,7 @@ export function DeviceFrame({ client, systemMode, deviceMode, children }: Props)
 
   // Desktop frame
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${styles.wrapperDesktop}`}>
       <div className={`${styles.desktop} ${themeClass}`} data-testid="device-frame-desktop">
         <div className={styles.desktopTitleBar}>
           <div className={styles.dot} />
