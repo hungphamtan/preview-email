@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color: #18181b;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
@@ -48,7 +48,7 @@
   left: 0;
   transform: translateY(-50%);
   z-index: 10;
-  background-color: #4f46e5;
+  background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
   color: #fff;
   border: none;
   border-radius: 0 6px 6px 0;
@@ -58,6 +58,7 @@
   line-height: 1;
   writing-mode: vertical-rl;
   text-orientation: mixed;
+  box-shadow: 0 10px 24px rgba(79, 70, 229, 0.28);
 }
 
 /* ── Relative wrapper for toggle positioning ─── */

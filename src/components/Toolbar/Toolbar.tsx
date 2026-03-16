@@ -1,5 +1,5 @@
 import type { EmailClient, SystemMode, DeviceMode, PreviewConfig } from '../../types'
-import { CLIENT_META, CLIENT_DEFAULT_DEVICE } from '../../types'
+import { CLIENT_META } from '../../types'
 import styles from './Toolbar.module.css'
 
 interface Props {
@@ -7,25 +7,22 @@ interface Props {
   onChange: (config: PreviewConfig) => void
 }
 
-const CLIENT_ICONS: Record<EmailClient, string> = {
-  'gmail-web':       '🌐',
-  'gmail-ios':       '📱',
-  'gmail-android':   '🤖',
-  'outlook-desktop': '🖥️',
-  'outlook-com':     '🌐',
-  'outlook-mobile':  '📱',
-  'apple-mail':      '✉️',
-  'outlook-mac':     '💻',
-  'yahoo-mail':      '🌐',
-}
+const DESKTOP_CLIENTS: EmailClient[] = [
+  'gmail-web', 'outlook-desktop', 'outlook-com', 'apple-mail', 'outlook-mac', 'yahoo-mail',
+]
+const MOBILE_CLIENTS: EmailClient[] = [
+  'gmail-ios', 'gmail-android', 'outlook-mobile',
+]
+
+const CLIENT_LABELS: Record<EmailClient, string> = Object.fromEntries(
+  CLIENT_META.map(c => [c.id, c.label])
+) as Record<EmailClient, string>
 
 export function Toolbar({ config, onChange }: Props) {
+  const visibleClients = config.deviceMode === 'desktop' ? DESKTOP_CLIENTS : MOBILE_CLIENTS
+
   function setClient(client: EmailClient) {
-    onChange({
-      ...config,
-      client,
-      deviceMode: CLIENT_DEFAULT_DEVICE[client],
-    })
+    onChange({ ...config, client })
   }
 
   function setMode(systemMode: SystemMode) {
@@ -33,65 +30,65 @@ export function Toolbar({ config, onChange }: Props) {
   }
 
   function setDevice(deviceMode: DeviceMode) {
-    onChange({ ...config, deviceMode })
+    const clients = deviceMode === 'desktop' ? DESKTOP_CLIENTS : MOBILE_CLIENTS
+    const client = clients.includes(config.client) ? config.client : clients[0]
+    onChange({ ...config, deviceMode, client })
   }
 
   return (
     <div className={styles.toolbar} role="toolbar" aria-label="Preview controls">
 
-      {/* Client selector */}
+      {/* Client selector — filtered by device mode */}
       <div className={styles.clientGroup} role="group" aria-label="Email client">
-        {CLIENT_META.map(client => (
+        {visibleClients.map(id => (
           <button
-            key={client.id}
-            className={`${styles.clientBtn} ${config.client === client.id ? styles.active : ''}`}
-            onClick={() => setClient(client.id)}
-            aria-pressed={config.client === client.id}
-            title={client.label}
+            key={id}
+            className={`${styles.clientBtn} ${config.client === id ? styles.active : ''}`}
+            onClick={() => setClient(id)}
+            aria-pressed={config.client === id}
           >
-            <span className={styles.clientIcon}>{CLIENT_ICONS[client.id]}</span>
-            <span>{client.label}</span>
+            {CLIENT_LABELS[id]}
           </button>
         ))}
+      </div>
+
+      <div className={styles.spacer} />
+
+      {/* Device toggle */}
+      <div className={styles.controlGroup} role="group" aria-label="Device mode">
+        <button
+          className={`${styles.controlBtn} ${config.deviceMode === 'desktop' ? styles.active : ''}`}
+          onClick={() => setDevice('desktop')}
+          aria-pressed={config.deviceMode === 'desktop'}
+        >
+          Desktop
+        </button>
+        <button
+          className={`${styles.controlBtn} ${config.deviceMode === 'mobile' ? styles.active : ''}`}
+          onClick={() => setDevice('mobile')}
+          aria-pressed={config.deviceMode === 'mobile'}
+        >
+          Mobile
+        </button>
       </div>
 
       <div className={styles.divider} />
 
       {/* System mode toggle */}
-      <div className={styles.modeToggle} role="group" aria-label="System mode">
+      <div className={styles.controlGroup} role="group" aria-label="System mode">
         <button
-          className={`${styles.modeBtn} ${config.systemMode === 'light' ? styles.active : ''}`}
+          className={`${styles.controlBtn} ${config.systemMode === 'light' ? styles.active : ''}`}
           onClick={() => setMode('light')}
           aria-pressed={config.systemMode === 'light'}
         >
-          ☀️ Light
+          Light
         </button>
         <button
-          className={`${styles.modeBtn} ${config.systemMode === 'dark' ? styles.active : ''}`}
+          className={`${styles.controlBtn} ${config.systemMode === 'dark' ? styles.active : ''}`}
           onClick={() => setMode('dark')}
           aria-pressed={config.systemMode === 'dark'}
         >
-          🌙 Dark
-        </button>
-      </div>
-
-      <div className={styles.divider} />
-
-      {/* Device toggle */}
-      <div className={styles.deviceToggle} role="group" aria-label="Device mode">
-        <button
-          className={`${styles.deviceBtn} ${config.deviceMode === 'desktop' ? styles.active : ''}`}
-          onClick={() => setDevice('desktop')}
-          aria-pressed={config.deviceMode === 'desktop'}
-        >
-          🖥️ Desktop
-        </button>
-        <button
-          className={`${styles.deviceBtn} ${config.deviceMode === 'mobile' ? styles.active : ''}`}
-          onClick={() => setDevice('mobile')}
-          aria-pressed={config.deviceMode === 'mobile'}
-        >
-          📱 Mobile
+          Dark
         </button>
       </div>
 

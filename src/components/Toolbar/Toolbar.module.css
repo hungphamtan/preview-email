@@ -1,133 +1,88 @@
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  background-color: #1c1c1e;
-  border-bottom: 1px solid #2e2e30;
+  gap: 10px;
+  padding: 8px 16px;
+  background-color: #0f172a;
+  border-bottom: 1px solid #1f2a44;
   flex-shrink: 0;
 }
 
-/* ── Client selector ─────────────────────────────────── */
+/* ── Client selector (left, grows) ──────────────── */
 .clientGroup {
   display: flex;
   align-items: center;
   gap: 2px;
-  background-color: #2a2a2c;
-  border-radius: 8px;
-  padding: 3px;
   flex-wrap: wrap;
 }
 
 .clientBtn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
+  padding: 6px 14px;
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #9a9a9f;
-  font-size: 12px;
+  color: #94a3b8;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.12s, color 0.12s;
+  transition: background 0.15s, color 0.15s;
   font-family: inherit;
 }
 
 .clientBtn:hover {
-  background-color: #3a3a3c;
-  color: #e5e5ea;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #dbeafe;
 }
 
 .clientBtn.active {
-  background-color: #4f46e5;
-  color: #ffffff;
+  background: linear-gradient(180deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.28);
 }
 
-.clientIcon {
-  font-size: 14px;
-  line-height: 1;
+/* ── Spacer ─────────────────────────────────────── */
+.spacer {
+  flex: 1;
 }
 
-/* ── Divider ─────────────────────────────────────────── */
+/* ── Divider ────────────────────────────────────── */
 .divider {
   width: 1px;
-  height: 28px;
-  background-color: #2e2e30;
+  height: 22px;
+  background-color: #1f2a44;
   flex-shrink: 0;
 }
 
-/* ── Mode toggle ─────────────────────────────────────── */
-.modeToggle {
+/* ── Control group (device / mode toggles) ──────── */
+.controlGroup {
   display: flex;
   align-items: center;
-  gap: 2px;
-  background-color: #2a2a2c;
-  border-radius: 8px;
-  padding: 3px;
+  gap: 1px;
+  background-color: #111c33;
+  border-radius: 7px;
+  padding: 2px;
+  border: 1px solid #1f2a44;
 }
 
-.modeBtn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.controlBtn {
   padding: 5px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   background: transparent;
-  color: #9a9a9f;
+  color: #94a3b8;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.12s, color 0.12s;
+  transition: background 0.15s, color 0.15s;
   font-family: inherit;
 }
 
-.modeBtn:hover {
-  background-color: #3a3a3c;
-  color: #e5e5ea;
+.controlBtn:hover {
+  color: #dbeafe;
 }
 
-.modeBtn.active {
-  background-color: #3a3a3c;
-  color: #f5f5f7;
-}
-
-/* ── Device toggle ───────────────────────────────────── */
-.deviceToggle {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background-color: #2a2a2c;
-  border-radius: 8px;
-  padding: 3px;
-}
-
-.deviceBtn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: #9a9a9f;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.12s, color 0.12s;
-  font-family: inherit;
-}
-
-.deviceBtn:hover {
-  background-color: #3a3a3c;
-  color: #e5e5ea;
-}
-
-.deviceBtn.active {
-  background-color: #3a3a3c;
-  color: #f5f5f7;
+.controlBtn.active {
+  background-color: rgba(99, 102, 241, 0.16);
+  color: #eef2ff;
 }
