@@ -1,0 +1,285 @@
+/* ── Shared wrapper ─────────────────────────────────────────── */
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Desktop frame ──────────────────────────────────────────── */
+.desktop {
+  width: 100%;
+  max-width: 860px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+}
+
+.desktopTitleBar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background-color: var(--frame-titlebar-bg, #e8e8e8);
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot:nth-child(1) { background-color: #ff5f57; }
+.dot:nth-child(2) { background-color: #febc2e; }
+.dot:nth-child(3) { background-color: #28c840; }
+
+.desktopAddressBar {
+  flex: 1;
+  margin-left: 8px;
+  height: 22px;
+  border-radius: 4px;
+  background-color: var(--frame-addressbar-bg, #d4d4d4);
+}
+
+.desktopToolbar {
+  padding: 8px 14px;
+  background-color: var(--frame-toolbar-bg, #f0f0f0);
+  border-bottom: 1px solid var(--frame-border, #d0d0d0);
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.toolbarBtn {
+  height: 20px;
+  border-radius: 3px;
+  background-color: var(--frame-btn-bg, #dcdcdc);
+}
+
+.desktopContent {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--frame-content-bg, #ffffff);
+  min-height: 500px;
+  max-height: 680px;
+}
+
+/* ── Mobile frame ───────────────────────────────────────────── */
+.mobile {
+  width: 390px;
+  flex-shrink: 0;
+  border-radius: 44px;
+  border: 8px solid var(--frame-device-border, #1a1a1a);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 16px 48px rgba(0, 0, 0, 0.40);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--frame-device-border, #1a1a1a);
+  position: relative;
+}
+
+.mobileNotch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0 6px;
+  background-color: var(--frame-titlebar-bg, #111111);
+  flex-shrink: 0;
+}
+
+.mobilePill {
+  width: 120px;
+  height: 32px;
+  border-radius: 20px;
+  background-color: #000000;
+}
+
+.mobileStatusBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 20px;
+  background-color: var(--frame-titlebar-bg, #111111);
+  flex-shrink: 0;
+}
+
+.mobileTime {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--frame-status-text, #ffffff);
+  font-family: -apple-system, sans-serif;
+}
+
+.mobileIcons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mobileIcon {
+  width: 16px;
+  height: 10px;
+  border-radius: 2px;
+  background-color: var(--frame-status-text, #ffffff);
+  opacity: 0.85;
+}
+.mobileIcon:last-child {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mobileEmailChrome {
+  padding: 8px 16px;
+  background-color: var(--frame-toolbar-bg, #f5f5f5);
+  border-bottom: 1px solid var(--frame-border, #e0e0e0);
+  flex-shrink: 0;
+}
+
+.mobileFromLine {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--frame-toolbar-text, #111111);
+  font-family: -apple-system, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileSubjectLine {
+  font-size: 11px;
+  color: var(--frame-toolbar-subtext, #666666);
+  font-family: -apple-system, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.mobileContent {
+  flex: 1;
+  overflow-y: auto;
+  background-color: var(--frame-content-bg, #ffffff);
+  max-height: 560px;
+  min-height: 400px;
+}
+
+.mobileHomeBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 10px;
+  background-color: var(--frame-titlebar-bg, #111111);
+  flex-shrink: 0;
+}
+
+.homeBarPill {
+  width: 120px;
+  height: 4px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Theme vars per client × mode ───────────────────────────── */
+.theme-gmail-light {
+  --frame-titlebar-bg:    #f1f3f4;
+  --frame-toolbar-bg:     #f8f9fa;
+  --frame-addressbar-bg:  #e8eaed;
+  --frame-border:         #dadce0;
+  --frame-btn-bg:         #e8eaed;
+  --frame-content-bg:     #ffffff;
+  --frame-device-border:  #3c3c3c;
+  --frame-status-text:    #111111;
+  --frame-toolbar-text:   #202124;
+  --frame-toolbar-subtext:#5f6368;
+}
+.theme-gmail-dark {
+  --frame-titlebar-bg:    #202124;
+  --frame-toolbar-bg:     #292a2d;
+  --frame-addressbar-bg:  #3c4043;
+  --frame-border:         #3c4043;
+  --frame-btn-bg:         #3c4043;
+  --frame-content-bg:     #202124;
+  --frame-device-border:  #1a1a1a;
+  --frame-status-text:    #e8eaed;
+  --frame-toolbar-text:   #e8eaed;
+  --frame-toolbar-subtext:#9aa0a6;
+}
+.theme-outlook-light {
+  --frame-titlebar-bg:    #f3f2f1;
+  --frame-toolbar-bg:     #faf9f8;
+  --frame-addressbar-bg:  #edebe9;
+  --frame-border:         #e1dfdd;
+  --frame-btn-bg:         #edebe9;
+  --frame-content-bg:     #ffffff;
+  --frame-device-border:  #3c3c3c;
+  --frame-status-text:    #111111;
+  --frame-toolbar-text:   #323130;
+  --frame-toolbar-subtext:#605e5c;
+}
+.theme-outlook-dark {
+  --frame-titlebar-bg:    #2b2b2b;
+  --frame-toolbar-bg:     #323130;
+  --frame-addressbar-bg:  #484644;
+  --frame-border:         #484644;
+  --frame-btn-bg:         #484644;
+  --frame-content-bg:     #1b1a19;
+  --frame-device-border:  #1a1a1a;
+  --frame-status-text:    #f3f2f1;
+  --frame-toolbar-text:   #f3f2f1;
+  --frame-toolbar-subtext:#c8c6c4;
+}
+.theme-apple-light {
+  --frame-titlebar-bg:    #ececec;
+  --frame-toolbar-bg:     #f5f5f5;
+  --frame-addressbar-bg:  #dedede;
+  --frame-border:         #d0d0d0;
+  --frame-btn-bg:         #dedede;
+  --frame-content-bg:     #ffffff;
+  --frame-device-border:  #c8c8c8;
+  --frame-status-text:    #111111;
+  --frame-toolbar-text:   #1d1d1f;
+  --frame-toolbar-subtext:#666666;
+}
+.theme-apple-dark {
+  --frame-titlebar-bg:    #1e1e1e;
+  --frame-toolbar-bg:     #2a2a2a;
+  --frame-addressbar-bg:  #3a3a3a;
+  --frame-border:         #3a3a3a;
+  --frame-btn-bg:         #3a3a3a;
+  --frame-content-bg:     #1e1e1e;
+  --frame-device-border:  #1a1a1a;
+  --frame-status-text:    #f5f5f7;
+  --frame-toolbar-text:   #f5f5f7;
+  --frame-toolbar-subtext:#98989d;
+}
+.theme-yahoo-light {
+  --frame-titlebar-bg:    #f5f8fa;
+  --frame-toolbar-bg:     #f5f8fa;
+  --frame-addressbar-bg:  #e6eaed;
+  --frame-border:         #dce0e3;
+  --frame-btn-bg:         #e6eaed;
+  --frame-content-bg:     #ffffff;
+  --frame-device-border:  #3c3c3c;
+  --frame-status-text:    #111111;
+  --frame-toolbar-text:   #1d1d1d;
+  --frame-toolbar-subtext:#757575;
+}
+.theme-yahoo-dark {
+  --frame-titlebar-bg:    #1d1f21;
+  --frame-toolbar-bg:     #232526;
+  --frame-addressbar-bg:  #383b3e;
+  --frame-border:         #383b3e;
+  --frame-btn-bg:         #383b3e;
+  --frame-content-bg:     #1d1f21;
+  --frame-device-border:  #1a1a1a;
+  --frame-status-text:    #e7e7e7;
+  --frame-toolbar-text:   #e7e7e7;
+  --frame-toolbar-subtext:#9a9a9a;
+}
