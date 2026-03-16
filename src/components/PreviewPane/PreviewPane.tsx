@@ -14,9 +14,25 @@ const CLIENT_LABELS = Object.fromEntries(
   CLIENT_META.map((client) => [client.id, client.label]),
 ) as Record<PreviewConfig['client'], string>
 
+const PREVIEW_BASE_STYLES = `
+  html, body {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  img, table, pre, code, blockquote {
+    max-width: 100% !important;
+  }
+`
+
 function buildSrcdoc(html: string, injectedStyles: string): string {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
+
+  const baseStyleEl = doc.createElement('style')
+  baseStyleEl.setAttribute('data-preview-base', 'true')
+  baseStyleEl.textContent = PREVIEW_BASE_STYLES
+  doc.head.appendChild(baseStyleEl)
 
   if (injectedStyles.trim()) {
     const styleEl = doc.createElement('style')

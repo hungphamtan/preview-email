@@ -68,7 +68,7 @@
 
 .desktopContent {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: var(--frame-content-bg, #ffffff);
   min-height: 0;
 }
@@ -169,7 +169,7 @@
 
 .mobileContent {
   height: 580px;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: var(--frame-content-bg, #ffffff);
   flex-shrink: 0;
 }
