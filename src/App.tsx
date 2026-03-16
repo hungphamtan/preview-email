@@ -4,6 +4,7 @@ import { Editor } from './components/Editor/Editor'
 import { PreviewPane } from './components/PreviewPane/PreviewPane'
 import { sampleEmail } from './assets/sampleEmail'
 import type { PreviewConfig } from './types'
+import styles from './App.module.css'
 
 const defaultConfig: PreviewConfig = {
   client: 'gmail-web',
@@ -14,9 +15,9 @@ const defaultConfig: PreviewConfig = {
 function App() {
   const [config, setConfig] = useState<PreviewConfig>(defaultConfig)
   const [rawHtml, setRawHtml] = useState<string>(sampleEmail)
-
-  // Debounce rawHtml by 300ms for large emails
   const [debouncedHtml, setDebouncedHtml] = useState<string>(sampleEmail)
+  const [editorOpen, setEditorOpen] = useState<boolean>(true)
+
   const debounceRef = useMemo(() => ({ timer: 0 }), [])
 
   function handleHtmlChange(value: string) {
@@ -26,22 +27,30 @@ function App() {
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100vw',
-      height: '100vh',
-      background: '#18181b',
-      overflow: 'hidden',
-    }}>
+    <div className={styles.app}>
       <Toolbar config={config} onChange={setConfig} />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', minHeight: 0 }}>
-        <div style={{ width: '40%', minWidth: 280, maxWidth: 560, overflow: 'hidden' }}>
+      <div className={styles.bodyRelative}>
+
+        {/* Editor panel */}
+        <div className={`${styles.editorPanel} ${editorOpen ? '' : styles.collapsed}`}>
           <Editor value={rawHtml} onChange={handleHtmlChange} />
         </div>
-        <div style={{ flex: 1, overflow: 'hidden' }}>
+
+        {/* Collapse/expand toggle */}
+        <button
+          className={styles.toggleBtn}
+          onClick={() => setEditorOpen(o => !o)}
+          aria-label={editorOpen ? 'Collapse editor' : 'Expand editor'}
+          title={editorOpen ? 'Collapse editor' : 'Expand editor'}
+        >
+          {editorOpen ? '◀' : '▶'}
+        </button>
+
+        {/* Preview panel */}
+        <div className={styles.previewPanel}>
           <PreviewPane rawHtml={debouncedHtml} config={config} />
         </div>
+
       </div>
     </div>
   )
