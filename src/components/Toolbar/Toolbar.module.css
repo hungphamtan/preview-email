@@ -1,0 +1,133 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background-color: #1c1c1e;
+  border-bottom: 1px solid #2e2e30;
+  flex-shrink: 0;
+}
+
+/* ── Client selector ─────────────────────────────────── */
+.clientGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #2a2a2c;
+  border-radius: 8px;
+  padding: 3px;
+  flex-wrap: wrap;
+}
+
+.clientBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9a9a9f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s;
+  font-family: inherit;
+}
+
+.clientBtn:hover {
+  background-color: #3a3a3c;
+  color: #e5e5ea;
+}
+
+.clientBtn.active {
+  background-color: #4f46e5;
+  color: #ffffff;
+}
+
+.clientIcon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ── Divider ─────────────────────────────────────────── */
+.divider {
+  width: 1px;
+  height: 28px;
+  background-color: #2e2e30;
+  flex-shrink: 0;
+}
+
+/* ── Mode toggle ─────────────────────────────────────── */
+.modeToggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #2a2a2c;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.modeBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9a9a9f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  font-family: inherit;
+}
+
+.modeBtn:hover {
+  background-color: #3a3a3c;
+  color: #e5e5ea;
+}
+
+.modeBtn.active {
+  background-color: #3a3a3c;
+  color: #f5f5f7;
+}
+
+/* ── Device toggle ───────────────────────────────────── */
+.deviceToggle {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: #2a2a2c;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.deviceBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9a9a9f;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  font-family: inherit;
+}
+
+.deviceBtn:hover {
+  background-color: #3a3a3c;
+  color: #e5e5ea;
+}
+
+.deviceBtn.active {
+  background-color: #3a3a3c;
+  color: #f5f5f7;
+}
