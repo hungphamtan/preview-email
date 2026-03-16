@@ -30,21 +30,22 @@ function App() {
     <div className={styles.app}>
       <Toolbar config={config} onChange={setConfig} />
       <div className={styles.bodyRelative}>
+        <div className={styles.editorShell}>
+          {/* Editor panel */}
+          <div className={`${styles.editorPanel} ${editorOpen ? '' : styles.collapsed}`}>
+            <Editor value={rawHtml} onChange={handleHtmlChange} />
+          </div>
 
-        {/* Editor panel */}
-        <div className={`${styles.editorPanel} ${editorOpen ? '' : styles.collapsed}`}>
-          <Editor value={rawHtml} onChange={handleHtmlChange} />
+          {/* Collapse/expand toggle */}
+          <button
+            className={styles.toggleBtn}
+            onClick={() => setEditorOpen(o => !o)}
+            aria-label={editorOpen ? 'Collapse editor' : 'Expand editor'}
+            title={editorOpen ? 'Collapse editor' : 'Expand editor'}
+          >
+            {editorOpen ? '◀' : '▶'}
+          </button>
         </div>
-
-        {/* Collapse/expand toggle */}
-        <button
-          className={styles.toggleBtn}
-          onClick={() => setEditorOpen(o => !o)}
-          aria-label={editorOpen ? 'Collapse editor' : 'Expand editor'}
-          title={editorOpen ? 'Collapse editor' : 'Expand editor'}
-        >
-          {editorOpen ? '◀' : '▶'}
-        </button>
 
         {/* Preview panel */}
         <div className={styles.previewPanel}>

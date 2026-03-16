@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 0;
   background-color: #0f172a;
   border-right: 1px solid #1f2a44;
 }
@@ -17,6 +18,13 @@
   gap: 8px;
 }
 
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .editorTitle {
   font-size: 12px;
   font-weight: 600;
@@ -25,10 +33,17 @@
   letter-spacing: 0.05em;
 }
 
+.editorHint {
+  color: #64748b;
+  font-size: 12px;
+}
+
 .editorActions {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .actionBtn {
@@ -67,17 +82,144 @@
   display: none;
 }
 
+.editorTools {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #1f2a44;
+  background-color: #0b1427;
+  min-width: 0;
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.toolLabel {
+  width: 60px;
+  flex-shrink: 0;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.toolSlot {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  visibility: hidden;
+}
+
+.toolSlotActive {
+  visibility: visible;
+}
+
+.imageSlot {
+  min-height: 40px;
+}
+
+.imageControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+  width: 100%;
+}
+
+.imageUrlInput {
+  flex: 1 1 280px;
+  min-width: 0;
+  border: 1px solid #24304d;
+  border-radius: 8px;
+  background-color: #111c33;
+  color: #e2e8f0;
+  padding: 7px 10px;
+  font: inherit;
+}
+
+.colorControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 4px 4px;
+  border: 1px solid #24304d;
+  border-radius: 999px;
+  background-color: #111c33;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.colorInput {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.colorInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.colorInput::-webkit-color-swatch {
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+}
+
+.colorValue {
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
 .codemirrorWrap {
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
   min-height: 0;
+  min-width: 0;
 }
 
 .codemirrorWrap :global(.cm-editor) {
   height: 100%;
   font-size: 13px;
+  min-width: 0;
 }
 
 .codemirrorWrap :global(.cm-scroller) {
   font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  overflow: auto !important;
+}
+
+.codemirrorWrap :global(.cm-content),
+.codemirrorWrap :global(.cm-line) {
+  min-width: max-content;
+}
+
+@media (max-width: 760px) {
+  .editorHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .editorActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .toolRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
 }
