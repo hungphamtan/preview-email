@@ -239,7 +239,7 @@ export function transformColorForGmailAndroid(
 
 export function transformColorForGmailIos(
   colorStr: string,
-  property: 'background' | 'text'
+  property: 'background' | 'text' | 'border'
 ): string {
   const v = colorStr.trim()
   if (PASSTHROUGH.has(v.toLowerCase())) return v
@@ -251,7 +251,19 @@ export function transformColorForGmailIos(
 
   let newL: number, newS: number, newH: number = h
 
-  if (property === 'background') {
+  if (property === 'border') {
+    // Borders: map light borders to a subtle visible shade on dark surfaces
+    if (l > 0.60) {
+      newL = 0.30
+      newS = 0.04
+      newH = 220
+    } else if (l > 0.30) {
+      newL = l * 0.50
+      newS = s * 0.5
+    } else {
+      return v // already dark
+    }
+  } else if (property === 'background') {
     // Saturated backgrounds (buttons, badges): darken slightly
     if (s > 0.25) {
       if (l > 0.25) {
@@ -262,9 +274,9 @@ export function transformColorForGmailIos(
         return v // already dark enough
       }
     } else if (l > 0.80) {
-      // Near-white → Gmail iOS dark surface (~#2a2d35)
-      newL = 0.18
-      newS = 0.12
+      // Near-white → Gmail iOS dark surface (~#313439)
+      newL = 0.21
+      newS = 0.08
       newH = 220
     } else if (l > 0.50) {
       // Light gray → darker with subtle cool tint

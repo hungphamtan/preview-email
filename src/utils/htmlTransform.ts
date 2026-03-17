@@ -10,7 +10,13 @@ export function serializeDom(doc: Document): string {
 
 // Properties treated as "background" for color transform purposes
 const BACKGROUND_PROPS = new Set([
-  'background', 'background-color', 'border-color',
+  'background', 'background-color',
+])
+
+// Properties treated as "border" — separated from background so simulators
+// can map borders to a visible shade instead of the surface color
+const BORDER_PROPS = new Set([
+  'border-color',
   'border-top-color', 'border-bottom-color', 'border-left-color', 'border-right-color',
   'border', 'border-top', 'border-bottom', 'border-left', 'border-right',
   'outline-color', 'outline',
@@ -21,6 +27,10 @@ const TEXT_PROPS = new Set(['color'])
 
 export function isBackgroundProp(prop: string): boolean {
   return BACKGROUND_PROPS.has(prop.toLowerCase())
+}
+
+export function isBorderProp(prop: string): boolean {
+  return BORDER_PROPS.has(prop.toLowerCase())
 }
 
 export function isTextProp(prop: string): boolean {
@@ -75,7 +85,7 @@ function isImageOnlySubtree(el: Element): boolean {
  */
 export function transformInlineStyles(
   doc: Document,
-  transformer: (prop: string, value: string) => string,
+  transformer: (prop: string, value: string, el?: Element) => string,
   skipEl?: (el: Element) => boolean
 ): Document {
   doc.querySelectorAll<HTMLElement>('[style]').forEach(el => {
@@ -89,7 +99,7 @@ export function transformInlineStyles(
         const prop = decl.slice(0, sep).trim()
         const value = decl.slice(sep + 1).trim()
         if (!prop || !value) return decl
-        const newValue = transformer(prop, value)
+        const newValue = transformer(prop, value, el)
         return `${prop}: ${newValue}`
       })
       .join('; ')

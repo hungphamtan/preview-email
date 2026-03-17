@@ -1,7 +1,7 @@
 import type { Simulator } from './types'
 import type { PreviewConfig, SimulatorResult } from '../types'
 import { transformColorForGmailIos, parseColorValue } from '../utils/colorTransform'
-import { parseHtmlToDom, serializeDom, transformInlineStyles, transformAttributeColors, isBackgroundProp, isTextProp } from '../utils/htmlTransform'
+import { parseHtmlToDom, serializeDom, transformInlineStyles, transformAttributeColors, isBackgroundProp, isBorderProp, isTextProp } from '../utils/htmlTransform'
 import { stripCspMetaTags, stripDarkMediaRules } from '../utils/cssParser'
 
 // Gmail iOS: selective colour remapping producing lighter dark surfaces
@@ -17,11 +17,23 @@ export const gmailIosSimulator: Simulator = {
     const doc = parseHtmlToDom(strippedHtml)
     stripCspMetaTags(doc)
 
-    transformInlineStyles(doc, (prop, value) => {
+    transformInlineStyles(doc, (prop, value, el) => {
       if (isBackgroundProp(prop)) {
         const colorPart = parseColorValue(value)
         if (colorPart) {
-          return value.replace(colorPart, transformColorForGmailIos(colorPart, 'background'))
+          // Thin divider elements (height ≤ 2px) should be treated as borders
+          const style = el?.getAttribute('style') || ''
+          const hMatch = style.match(/height:\s*(\d+)px/)
+          const wMatch = style.match(/width:\s*(\d+)px/)
+          const isDivider = (hMatch && parseInt(hMatch[1]) <= 2) || (wMatch && parseInt(wMatch[1]) <= 2)
+          const role = isDivider ? 'border' as const : 'background' as const
+          return value.replace(colorPart, transformColorForGmailIos(colorPart, role))
+        }
+      }
+      if (isBorderProp(prop)) {
+        const colorPart = parseColorValue(value)
+        if (colorPart) {
+          return value.replace(colorPart, transformColorForGmailIos(colorPart, 'border'))
         }
       }
       if (isTextProp(prop)) {
@@ -62,7 +74,7 @@ html {
   color-scheme: light !important;
 }
 html, body {
-  background-color: #2a2d35 !important;
+  background-color: #313439 !important;
   color: #e5e5ea !important;
 }`.trim()
 
