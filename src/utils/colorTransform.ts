@@ -232,3 +232,86 @@ export function transformColorForGmailAndroid(
   const hex = rgbToHex(nr, ng, nb)
   return parsed.a < 1 ? hex.replace('#', 'rgba(') + `,${parsed.a})` : hex
 }
+
+// ── Gmail iOS smart-inversion transform ──────────────────────────────────────
+// Similar to Android but produces lighter dark surfaces with a subtle cool
+// blue tint, matching real Gmail iOS dark mode rendering.
+
+export function transformColorForGmailIos(
+  colorStr: string,
+  property: 'background' | 'text'
+): string {
+  const v = colorStr.trim()
+  if (PASSTHROUGH.has(v.toLowerCase())) return v
+
+  const parsed = parseColor(v)
+  if (!parsed) return v
+
+  const [h, s, l] = rgbToHsl(parsed.r, parsed.g, parsed.b)
+
+  let newL: number, newS: number, newH: number = h
+
+  if (property === 'background') {
+    // Saturated backgrounds (buttons, badges): darken slightly
+    if (s > 0.25) {
+      if (l > 0.25) {
+        newL = l * 0.50
+        newS = s
+        newH = h
+      } else {
+        return v // already dark enough
+      }
+    } else if (l > 0.80) {
+      // Near-white → Gmail iOS dark surface (~#2a2d35)
+      newL = 0.18
+      newS = 0.12
+      newH = 220
+    } else if (l > 0.50) {
+      // Light gray → darker with subtle cool tint
+      newL = l * 0.30
+      newS = 0.08
+      newH = 220
+    } else if (l > 0.30) {
+      // Medium gray → moderately darkened
+      newL = l * 0.45
+      newS = 0.06
+      newH = 220
+    } else {
+      return v // already dark
+    }
+  } else {
+    // Text — Gmail iOS slightly darkens saturated text (links, accents)
+    if (s > 0.35) {
+      if (l > 0.20) {
+        const darkened = l * 0.70
+        const [cr, cg, cb] = hslToRgb(h, s * 0.85, Math.max(0.15, darkened))
+        const chex = rgbToHex(cr, cg, cb)
+        return parsed.a < 1 ? chex.replace('#', 'rgba(') + `,${parsed.a})` : chex
+      }
+      return v
+    }
+
+    if (l > 0.85) {
+      // White/near-white text → dark (e.g. button text on colored bg)
+      newL = 0.15
+      newS = 0
+    } else if (l < 0.30) {
+      // Dark/black text → near-white
+      newL = 0.87
+      newS = 0
+    } else if (l < 0.55) {
+      newL = 0.55 + (0.55 - l) * 0.35
+      newS = 0
+    } else {
+      return v // mid-range, preserve
+    }
+    newH = h
+  }
+
+  newS = Math.min(1, Math.max(0, newS))
+  newL = Math.min(1, Math.max(0, newL))
+
+  const [nr, ng, nb] = hslToRgb(newH, newS, newL)
+  const hex = rgbToHex(nr, ng, nb)
+  return parsed.a < 1 ? hex.replace('#', 'rgba(') + `,${parsed.a})` : hex
+}
