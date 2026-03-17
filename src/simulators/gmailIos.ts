@@ -60,7 +60,6 @@ export const gmailIosSimulator: Simulator = {
       if (isLikelyPhoto || isLarge) return
 
       const existing = img.getAttribute('style') || ''
-      const maxDim = Math.max(w, h)
 
       // Gmail iOS does not bitmap-invert small icons — leave them as-is.
       // Logos with white bg use blend mode for natural appearance.
