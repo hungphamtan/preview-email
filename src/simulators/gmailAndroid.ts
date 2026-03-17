@@ -1,7 +1,7 @@
 import type { Simulator } from './types'
 import type { PreviewConfig, SimulatorResult } from '../types'
 import { transformColorForGmailAndroid, parseColorValue } from '../utils/colorTransform'
-import { parseHtmlToDom, serializeDom, transformInlineStyles, transformAttributeColors, isBackgroundProp, isTextProp } from '../utils/htmlTransform'
+import { parseHtmlToDom, serializeDom, transformInlineStyles, transformAttributeColors, isBackgroundProp, isBorderProp, isTextProp } from '../utils/htmlTransform'
 import { stripCspMetaTags, stripDarkMediaRules } from '../utils/cssParser'
 
 // Gmail Android: partial/smart inversion — lighter than iOS full inversion.
@@ -24,6 +24,12 @@ export const gmailAndroidSimulator: Simulator = {
     // images are left untouched.
     transformInlineStyles(doc, (prop, value) => {
       if (isBackgroundProp(prop)) {
+        const colorPart = parseColorValue(value)
+        if (colorPart) {
+          return value.replace(colorPart, transformColorForGmailAndroid(colorPart, 'background'))
+        }
+      }
+      if (isBorderProp(prop)) {
         const colorPart = parseColorValue(value)
         if (colorPart) {
           return value.replace(colorPart, transformColorForGmailAndroid(colorPart, 'background'))
@@ -59,7 +65,7 @@ export const gmailAndroidSimulator: Simulator = {
       const maxDim = Math.max(w, h)
 
       // Small square-ish icons (app icons): full inversion
-      // Larger logos/banners with white bg: multiply blend to darken white bg
+      // Larger logos/banners with white bg: blend naturally with dark container
       const isDarkBgIcon = maxDim > 0 && maxDim <= 50
       const effect = isDarkBgIcon
         ? 'filter: invert(1) hue-rotate(180deg)'
