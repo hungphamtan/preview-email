@@ -5,7 +5,7 @@ import { parseHtmlToDom, serializeDom, transformInlineStyles, transformAttribute
 import { stripCspMetaTags, stripDarkMediaRules } from '../utils/cssParser'
 
 // Gmail Android: partial/smart inversion — lighter than iOS full inversion.
-// Remaps light backgrounds and dark text; images are NOT inverted.
+// Remaps light backgrounds and dark text; small/icon images are bitmap-inverted.
 export const gmailAndroidSimulator: Simulator = {
   transform(rawHtml: string, config: PreviewConfig): SimulatorResult {
     if (config.systemMode === 'light') {
@@ -19,9 +19,9 @@ export const gmailAndroidSimulator: Simulator = {
     stripCspMetaTags(doc)
 
     // Gmail Android partial inversion: darkens ALL light backgrounds (including
-    // behind images) and lightens dark text.  Images themselves are untouched,
-    // but their container backgrounds ARE transformed — dark logos on transparent
-    // PNGs become invisible, matching real Gmail Android behaviour.
+    // behind images) and lightens dark text.  Small/icon images are bitmap-
+    // inverted (matching Android Force Dark on WebView), but photos and large
+    // images are left untouched.
     transformInlineStyles(doc, (prop, value) => {
       if (isBackgroundProp(prop)) {
         const colorPart = parseColorValue(value)
@@ -39,6 +39,24 @@ export const gmailAndroidSimulator: Simulator = {
     })
 
     transformAttributeColors(doc, v => transformColorForGmailAndroid(v, 'background'))
+
+    // Android Force Dark bitmap-inverts small/icon-like images (logos, icons)
+    // but preserves photos and large complex images.  The visual effect is
+    // equivalent to CSS `filter: invert(1) hue-rotate(180deg)`.
+    doc.querySelectorAll('img').forEach(img => {
+      const w = parseInt(img.getAttribute('width') || '0', 10)
+      const h = parseInt(img.getAttribute('height') || '0', 10)
+      const src = (img.getAttribute('src') || '').toLowerCase()
+
+      const isLikelyPhoto = /\.jpe?g(\?|$)/.test(src)
+      const isLarge = w > 200 && h > 200
+
+      if (!isLikelyPhoto && !isLarge) {
+        const existing = img.getAttribute('style') || ''
+        const filter = 'filter: invert(1) hue-rotate(180deg)'
+        img.setAttribute('style', existing ? `${existing}; ${filter}` : filter)
+      }
+    })
 
     // color-scheme: light prevents the browser from applying its own auto-dark-mode
     // to CSS <style> block colours (e.g. link colours) — Gmail Android ignores
