@@ -179,27 +179,38 @@ export function transformColorForGmailAndroid(
   if (property === 'background') {
     // Gmail Android only transforms neutral/low-saturation backgrounds.
     // Saturated (colored) backgrounds — buttons, badges, accent cells — are preserved.
-    if (s > 0.15) return v
+    // Threshold 0.25 catches near-neutral dark blues/grays (e.g. #272e3a s≈0.20).
+    if (s > 0.25) return v
 
     if (l > 0.80) {
-      // Near-white / white → dark gray (~#262626)
-      newL = 0.15
+      // Near-white / white → Gmail Android Material Dark surface (~#121212)
+      newL = 0.07
       newS = 0
     } else if (l > 0.50) {
       // Light gray → proportionally darker
-      newL = l * 0.25
+      newL = l * 0.15
       newS = 0
     } else if (l > 0.30) {
       // Medium-light gray → moderately darkened
-      newL = l * 0.40
+      newL = l * 0.25
       newS = 0
     } else {
       return v // already dark
     }
   } else {
-    // text — Gmail Android only transforms neutral text (dark → light).
-    // Colored text (links, accent labels) is preserved.
-    if (s > 0.20) return v
+    // text — Gmail Android lightens dark text for readability on dark backgrounds.
+    // Neutral text is fully inverted; saturated text gets a lightness boost
+    // to maintain contrast while preserving hue.
+    if (s > 0.35) {
+      // Colored text: boost lightness if too dark for dark background
+      if (l < 0.45) {
+        const boosted = 0.45 + (0.45 - l) * 0.4
+        const [cr, cg, cb] = hslToRgb(h, s, Math.min(0.75, boosted))
+        const hex = rgbToHex(cr, cg, cb)
+        return parsed.a < 1 ? hex.replace('#', 'rgba(') + `,${parsed.a})` : hex
+      }
+      return v
+    }
 
     if (l < 0.30) {
       // Dark/black text → near-white

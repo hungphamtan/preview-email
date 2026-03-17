@@ -40,9 +40,11 @@ export const gmailAndroidSimulator: Simulator = {
 
     transformAttributeColors(doc, v => transformColorForGmailAndroid(v, 'background'))
 
-    // Android Force Dark bitmap-inverts small/icon-like images (logos, icons)
-    // but preserves photos and large complex images.  The visual effect is
-    // equivalent to CSS `filter: invert(1) hue-rotate(180deg)`.
+    // Android Force Dark handles images differently based on size/type:
+    // - Small square icons (≤50px): bitmap-inverted (app icons with dark bg)
+    // - Larger small images (logos with white bg): blended via mix-blend-mode
+    //   so the white background merges with the dark container
+    // - Photos (.jpg) and large images: left untouched
     doc.querySelectorAll('img').forEach(img => {
       const w = parseInt(img.getAttribute('width') || '0', 10)
       const h = parseInt(img.getAttribute('height') || '0', 10)
@@ -51,11 +53,19 @@ export const gmailAndroidSimulator: Simulator = {
       const isLikelyPhoto = /\.jpe?g(\?|$)/.test(src)
       const isLarge = w > 200 && h > 200
 
-      if (!isLikelyPhoto && !isLarge) {
-        const existing = img.getAttribute('style') || ''
-        const filter = 'filter: invert(1) hue-rotate(180deg)'
-        img.setAttribute('style', existing ? `${existing}; ${filter}` : filter)
-      }
+      if (isLikelyPhoto || isLarge) return
+
+      const existing = img.getAttribute('style') || ''
+      const maxDim = Math.max(w, h)
+
+      // Small square-ish icons (app icons): full inversion
+      // Larger logos/banners with white bg: multiply blend to darken white bg
+      const isDarkBgIcon = maxDim > 0 && maxDim <= 50
+      const effect = isDarkBgIcon
+        ? 'filter: invert(1) hue-rotate(180deg)'
+        : 'mix-blend-mode: normal'
+
+      img.setAttribute('style', existing ? `${existing}; ${effect}` : effect)
     })
 
     // color-scheme: light prevents the browser from applying its own auto-dark-mode
@@ -66,7 +76,7 @@ html {
   color-scheme: light !important;
 }
 html, body {
-  background-color: #1c1c1e !important;
+  background-color: #121212 !important;
   color: #e5e5ea !important;
 }`.trim()
 
